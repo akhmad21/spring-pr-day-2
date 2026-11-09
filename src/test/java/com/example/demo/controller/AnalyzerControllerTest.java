@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.request.CharAnalysisRequest;
+import com.example.demo.dto.response.BaseResponse;
 import com.example.demo.dto.response.CharAnalysisResponse;
 import com.example.demo.service.CharAnalysisService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -50,5 +53,33 @@ class AnalyzerControllerTest {
                 .andExpect(jsonPath("$.data.id").value(1))
                 .andExpect(jsonPath("$.data.kalimat").value("gajah mati meninggalkan gading"))
                 .andExpect(jsonPath("$.data.totalHuruf").value(27));
+    }
+
+    @Test
+    void testDetailByIdFound() throws Exception {
+        CharAnalysisResponse mockResponse = new CharAnalysisResponse(
+                1L,
+                "gajah mati",
+                9,
+                Map.of('a', 3)
+        );
+        Mockito.when(charAnalysisService.getDetailById(eq(1L))).thenReturn(BaseResponse.ok(mockResponse));
+
+        mockMvc.perform(get("/api/v1/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data.id").value(1))
+                .andExpect(jsonPath("$.data.kalimat").value("gajah mati"));
+    }
+
+    @Test
+    void testDetailByIdNotFound() throws Exception {
+        Mockito.when(charAnalysisService.getDetailById(eq(99L)))
+                .thenReturn(BaseResponse.error("Data dengan id 99 tidak ditemukan"));
+
+        mockMvc.perform(get("/api/v1/99"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("failed"))
+                .andExpect(jsonPath("$.message").value("Data dengan id 99 tidak ditemukan"));
     }
 }

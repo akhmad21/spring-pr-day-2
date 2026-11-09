@@ -33,4 +33,9 @@ public class AnalyzerController {
         log.info("X-Request-Id: {}, kalimat: {}", requestId, kalimat);
         return BaseResponse.ok(charAnalysisService.hitungDanSimpan(request));
     }
+
+    @GetMapping("/{id}")
+    public BaseResponse<CharAnalysisResponse> getDetailById(@PathVariable Long id) {
+        return charAnalysisService.getDetailById(id);
+    }
 }
