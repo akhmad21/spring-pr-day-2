@@ -38,4 +38,14 @@ public class AnalyzerController {
     public BaseResponse<CharAnalysisResponse> getDetailById(@PathVariable Long id) {
         return charAnalysisService.getDetailById(id);
     }
+
+    @GetMapping("/minimal")
+    public BaseResponse<List<CharAnalysisResponse>> cariMinimalHuruf(@RequestParam(defaultValue = "0") int min) {
+        return BaseResponse.ok(charAnalysisService.cariMinimalHuruf(min));
+    }
+
+    @GetMapping("/terbaru")
+    public BaseResponse<List<CharAnalysisResponse>> cariTerbaru() {
+        return BaseResponse.ok(charAnalysisService.cariTerbaru());
+    }
 }
