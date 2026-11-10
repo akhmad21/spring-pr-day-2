@@ -8,6 +8,8 @@ import com.example.demo.service.CharAnalysisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +38,12 @@ public class AnalyzerController {
     }
 
     @GetMapping("/{id}")
-    public BaseResponse<CharAnalysisResponse> getDetailById(@PathVariable Long id) {
-        return charAnalysisService.getDetailById(id);
+    public ResponseEntity<BaseResponse<CharAnalysisResponse>> getDetailById(@PathVariable Long id) {
+        BaseResponse<CharAnalysisResponse> response = charAnalysisService.getDetailById(id);
+        if ("failed".equals(response.getStatus())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/minimal")

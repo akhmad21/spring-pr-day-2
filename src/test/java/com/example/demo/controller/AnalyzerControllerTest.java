@@ -44,7 +44,7 @@ class AnalyzerControllerTest {
                 .andExpect(jsonPath("$.data[0].id").value(1))
                 .andExpect(jsonPath("$.data[0].kalimat").value("gajah mati"))
                 .andExpect(jsonPath("$.data[0].totalHuruf").value(9))
-                .andExpect(jsonPath("$.data[0].frekuensi").doesNotExist()); // frekuensi must not exist!
+                .andExpect(jsonPath("$.data[0].frekuensi").doesNotExist());
     }
 
     @Test
@@ -89,12 +89,12 @@ class AnalyzerControllerTest {
     }
 
     @Test
-    void testDetailByIdNotFound() throws Exception {
+    void testDetailByIdNotFoundReturns404() throws Exception {
         Mockito.when(charAnalysisService.getDetailById(eq(99L)))
                 .thenReturn(BaseResponse.error("Data dengan id 99 tidak ditemukan"));
 
         mockMvc.perform(get("/api/v1/99"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound()) // Status HTTP 404 Not Found!
                 .andExpect(jsonPath("$.status").value("failed"))
                 .andExpect(jsonPath("$.message").value("Data dengan id 99 tidak ditemukan"));
     }
