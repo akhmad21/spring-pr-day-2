@@ -35,4 +35,5 @@ build/
 # Ignore custom training docs & postman collections from git
 *.postman_collection.json
 PANDUAN_KODE_SYSTEM_ANALYST.md
+STEP_BY_STEP_PROJECT_PR_DAY2.md
 docker-compose.yml
