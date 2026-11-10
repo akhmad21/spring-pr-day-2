@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.CharAnalysisRequest;
 import com.example.demo.dto.response.BaseResponse;
+import com.example.demo.dto.response.CharAnalysisListResponse;
 import com.example.demo.dto.response.CharAnalysisResponse;
 import com.example.demo.entity.CharAnalysis;
 import com.example.demo.repository.CharAnalysisRepository;
@@ -22,7 +23,7 @@ public class CharAnalysisServiceImpl implements CharAnalysisService {
     private final CharAnalysisRepository charAnalysisRepository;
 
     @Override
-    public List<CharAnalysisResponse> cari(String kata) {
+    public List<CharAnalysisListResponse> cari(String kata) {
         List<CharAnalysis> semua;
         if (kata == null || kata.isBlank()) {
             semua = charAnalysisRepository.findAll();
@@ -30,9 +31,9 @@ public class CharAnalysisServiceImpl implements CharAnalysisService {
             semua = charAnalysisRepository.findByKalimatContainingIgnoreCase(kata);
         }
 
-        List<CharAnalysisResponse> hasil = new ArrayList<>();
+        List<CharAnalysisListResponse> hasil = new ArrayList<>();
         for (CharAnalysis data : semua) {
-            hasil.add(toResponse(data));
+            hasil.add(CharAnalysisListResponse.from(data));
         }
         return hasil;
     }

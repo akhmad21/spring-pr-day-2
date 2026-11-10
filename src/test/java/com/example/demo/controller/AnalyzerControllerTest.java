@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.CharAnalysisRequest;
 import com.example.demo.dto.response.BaseResponse;
+import com.example.demo.dto.response.CharAnalysisListResponse;
 import com.example.demo.dto.response.CharAnalysisResponse;
 import com.example.demo.service.CharAnalysisService;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +31,20 @@ class AnalyzerControllerTest {
     void setUp() {
         charAnalysisService = Mockito.mock(CharAnalysisService.class);
         mockMvc = MockMvcBuilders.standaloneSetup(new AnalyzerController(charAnalysisService)).build();
+    }
+
+    @Test
+    void testGetListOnlyReturnsIdKalimatTotalHuruf() throws Exception {
+        CharAnalysisListResponse item = new CharAnalysisListResponse(1L, "gajah mati", 9);
+        Mockito.when(charAnalysisService.cari(null)).thenReturn(List.of(item));
+
+        mockMvc.perform(get("/api/v1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.data[0].id").value(1))
+                .andExpect(jsonPath("$.data[0].kalimat").value("gajah mati"))
+                .andExpect(jsonPath("$.data[0].totalHuruf").value(9))
+                .andExpect(jsonPath("$.data[0].frekuensi").doesNotExist()); // frekuensi must not exist!
     }
 
     @Test

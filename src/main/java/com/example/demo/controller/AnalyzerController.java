@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.request.CharAnalysisRequest;
 import com.example.demo.dto.response.BaseResponse;
+import com.example.demo.dto.response.CharAnalysisListResponse;
 import com.example.demo.dto.response.CharAnalysisResponse;
 import com.example.demo.service.CharAnalysisService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class AnalyzerController {
     private final CharAnalysisService charAnalysisService;
 
     @GetMapping
-    public BaseResponse<List<CharAnalysisResponse>> cari(@RequestParam(required = false) String kalimat) {
+    public BaseResponse<List<CharAnalysisListResponse>> cari(@RequestParam(required = false) String kalimat) {
         return BaseResponse.ok(charAnalysisService.cari(kalimat));
     }
 
